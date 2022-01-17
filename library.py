@@ -25,3 +25,22 @@ class MappingTransformer(BaseEstimator, TransformerMixin):
   def fit_transform(self, X, y = None):
     result = self.transform(X)
     return result
+
+  
+class RenamingTransformer(BaseEstimator, TransformerMixin):
+  #your __init__ method below
+
+  def __init__(self, mapping_dict:dict):  
+    self.mapping_dict = mapping_dict
+
+  #write the transform method without asserts. Again, maybe copy and paste from MappingTransformer and fix up.   
+  def transform(self, X):
+    assert isinstance(X, pd.core.frame.DataFrame), f'RenamingTransformer.transform expected Dataframe but got {type(X)} instead.'
+    #your assert code below
+
+    column_list = X.columns.to_list()
+    not_found = list(set(self.mapping_dict.keys()) - set(column_list))
+    assert len(not_found) < 0, f"Columns {str(not_found)[1:-1]}, are not in the data table"
+
+    X_ = X.copy()
+    return X_.rename(columns=self.mapping_dict)
