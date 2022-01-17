@@ -61,7 +61,7 @@ class OHETransformer(BaseEstimator, TransformerMixin):
 
         temp_df = X.copy()
         temp_df = pd.get_dummies(temp_df,
-                                 prefix="ISP",
+                                 prefix="Joined",
                                  prefix_sep="_",
                                  columns=[self.target_column],
                                  dummy_na=self.dummy_na,
