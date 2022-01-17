@@ -74,3 +74,29 @@ class OHETransformer(BaseEstimator, TransformerMixin):
 
     def fit_transform(self, X, X2=None):
         return self.transform(X)
+
+
+class DropColumnsTransformer(BaseEstimator, TransformerMixin):
+    def __init__(self, column_list, action='drop'):
+        assert action in ['keep',
+                          'drop'], f'DropColumnsTransformer action {action} not in ["keep", "drop"]'
+        assert isinstance(column_list,
+                          list), f'DropColumnsTransformer expected list but saw {type(column_list)}'
+        self.column_list = column_list
+        self.action = action
+
+    def fit(self, X):
+        print("Fit does nothing")
+        return X
+
+    def transform(self, X):
+
+        temp_df = X.copy()
+        if self.action == "drop":
+            return temp_df.drop(columns=self.column_list)
+        else:
+            return temp_df[self.column_list]
+            # return temp_df
+
+    def fit_transform(self, X, X2=None):
+        return self.transform(X)
