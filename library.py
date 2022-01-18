@@ -61,8 +61,6 @@ class OHETransformer(BaseEstimator, TransformerMixin):
 
         temp_df = X.copy()
         temp_df = pd.get_dummies(temp_df,
-                                 prefix="Joined",
-                                 prefix_sep="_",
                                  columns=[self.target_column],
                                  dummy_na=self.dummy_na,
                                  drop_first=self.drop_first)
@@ -97,6 +95,86 @@ class DropColumnsTransformer(BaseEstimator, TransformerMixin):
         else:
             return temp_df[self.column_list]
             # return temp_df
+
+    def fit_transform(self, X, X2=None):
+        return self.transform(X)
+
+
+class PearsonTransformer(BaseEstimator, TransformerMixin):
+    def __init__(self, threshold):
+        self.threshold = threshold
+
+    def fit(self, X, X2=None):
+        print("From PearsonTransformer: Warning: Fit does nothing!")
+        return X
+
+    def transform(self, X):
+        temp = X.copy()
+        df_corr = temp.corr(method='pearson')
+        masked_df = df_corr.abs() > self.threshold
+        upper_mask = np.triu(masked_df, 1)
+        t = np.any(upper_mask, 0)
+        correlated_columns = [masked_df.columns[i] for i, j in
+                              enumerate(upper_mask) if t[i]]
+        new_df = transformed_df.drop(correlated_columns, axis=1)
+
+    def fit_transform(self, X, y=None, **fit_params):
+        return self.transform(X)
+
+
+class Sigma3Transformer(BaseEstimator, TransformerMixin):
+    def __init__(self, target_column):
+        self.target_column = target_column
+
+    def transform(self, X):
+        assert isinstance(X,
+                          pd.core.frame.DataFrame), f"From Sigma3Transformer: transform expected Pandas DF, got {type(X)}"
+
+        temp = X.copy()
+        mean = temp[self.target_column].mean()
+        std = temp[self.target_column].std()  # sigma
+        lower_bound = mean - 3 * std
+        upper_bound = mean + 3 * std
+        temp[self.target_column] = temp[self.target_column].clip(
+            lower=lower_bound, upper=upper_bound)
+
+        return temp
+
+    def fit(self, X, X2=None):
+        print("Warning: Sigma3Transformer fit does nothing!")
+        return X
+
+    def fit_transform(self, X, X2=None):
+        return self.transform(X)
+
+
+class TukeyTransformer(BaseEstimator, TransformerMixin):
+    def __init__(self, target_column, fence="outer"):
+        assert fence in ["inner", "outer"]
+        self.target_column = target_column
+        self.fence = fence
+
+    def transform(self, X, X2=None):
+        temp = X.copy()
+        q1 = temp[self.target_column].quantile(0.25)
+        q3 = temp[self.target_column].quantile(0.75)
+        iqr = q3 - q1
+        outer_low = q1 - 3 * iqr
+        outer_high = q3 + 3 * iqr
+        inner_low = q3 - 1.5 * iqr
+        inner_high = q3 + 1.5 * iqr
+
+        if self.fence == "inner":
+            temp[self.target_column] = temp[self.target_column].\
+                clip(lower=inner_low, upper=inner_high)
+        else:
+            temp[self.target_column] = temp[self.target_column].\
+                clip(lower=outer_low, upper=outer_high)
+        return temp
+
+    def fit(self, X, X2=None):
+        print("Warning: TukeyTransformer fit does nothing!")
+        return X
 
     def fit_transform(self, X, X2=None):
         return self.transform(X)
