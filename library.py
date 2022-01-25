@@ -180,22 +180,22 @@ class TukeyTransformer(BaseEstimator, TransformerMixin):
         return self.transform(X)
 
 
-class MinMaxTransformer(BaseEstimator, TransformerMixin):
+# class MinMaxTransformer(BaseEstimator, TransformerMixin):
 
-    def fit(self, X, X2=None):
-        print("MinMaxTransformer fit does nothing!")
-        return X
+#     def fit(self, X, X2=None):
+#         print("MinMaxTransformer fit does nothing!")
+#         return X
 
-    def transform(self, X, X2=None):
-        temp = X.copy()
-        for col in temp:
-            mi = temp[col].min()
-            mx = temp[col].max()
-            denom = (mx - mi)
-            temp[col] -= mi
-            temp[col] /= denom
+#     def transform(self, X, X2=None):
+#         temp = X.copy()
+#         for col in temp:
+#             mi = temp[col].min()
+#             mx = temp[col].max()
+#             denom = (mx - mi)
+#             temp[col] -= mi
+#             temp[col] /= denom
 
-        return temp
+#         return temp
 
-    def fit_transform(self, X, X2=None):
-        return self.transform(X)
+#     def fit_transform(self, X, X2=None):
+#         return self.transform(X)
