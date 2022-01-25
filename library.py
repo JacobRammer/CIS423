@@ -161,8 +161,8 @@ class TukeyTransformer(BaseEstimator, TransformerMixin):
         iqr = q3 - q1
         outer_low = q1 - 3 * iqr
         outer_high = q3 + 3 * iqr
-        inner_low = q3 - 1.5 * iqr
-        inner_high = q3 + 1.5 * iqr
+        inner_low = q3 - (1.5 * iqr)
+        inner_high = q3 + (1.5 * iqr)
 
         if self.fence == "inner":
             temp[self.target_column] = temp[self.target_column].\
@@ -178,3 +178,24 @@ class TukeyTransformer(BaseEstimator, TransformerMixin):
 
     def fit_transform(self, X, X2=None):
         return self.transform(X)
+
+
+# class MinMaxTransformer(BaseEstimator, TransformerMixin):
+
+#     def fit(self, X, X2=None):
+#         print("MinMaxTransformer fit does nothing!")
+#         return X
+
+#     def transform(self, X, X2=None):
+#         temp = X.copy()
+#         for col in temp:
+#             mi = temp[col].min()
+#             mx = temp[col].max()
+#             denom = (mx - mi)
+#             temp[col] -= mi
+#             temp[col] /= denom
+
+#         return temp
+
+#     def fit_transform(self, X, X2=None):
+#         return self.transform(X)
