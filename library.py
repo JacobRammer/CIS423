@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import Pipeline
+from sklearn.impute import KNNImputer
 
 
 # This class maps values in a column, numeric or categorical.
@@ -199,3 +200,23 @@ class MinMaxTransformer(BaseEstimator, TransformerMixin):
 
     def fit_transform(self, X, X2=None):
         return self.transform(X)
+
+
+class KNNTransformer(BaseEstimator, TransformerMixin):
+  def __init__(self, n_neighbors=5, weights="uniform", add_indicator=False):
+    self.n_neighbors = n_neighbors
+    self.weights = weights
+    self.add_indicator = add_indicator
+
+  def fit(self, x):
+    print("KNNTransformer does not do anythin")
+    return x
+
+  def transform(self, x, x2=None):
+    temp = x.copy()
+    knn = KNNImputer(n_neighbors=self.n_neighbors,
+                     weights=self.weights, add_indicator=self.add_indicator)
+    return pd.DataFrame(data=knn.fit_transform(temp), columns=temp.columns)
+
+  def fit_transform(self, x, x2=None):
+    return self.transform(x)
