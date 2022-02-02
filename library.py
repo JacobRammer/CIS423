@@ -4,8 +4,6 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import Pipeline
 from sklearn.impute import KNNImputer
 from sklearn.metrics import f1_score
-from sklearn.model_selection import train_test_split
-
 
 
 # This class maps values in a column, numeric or categorical.
@@ -193,12 +191,11 @@ class MinMaxTransformer(BaseEstimator, TransformerMixin):
     def transform(self, X, X2=None):
         temp = X.copy()
         for col in temp.columns:
-            if not isinstance(col, object):
-                mi = temp[col].min()
-                mx = temp[col].max()
-                denom = mx - mi
-                temp[col] -= mi
-                temp[col] /= denom
+            mi = temp[col].min()
+            mx = temp[col].max()
+            denom = mx - mi
+            temp[col] -= mi
+            temp[col] /= denom
 
         return temp
 
