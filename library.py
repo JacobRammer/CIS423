@@ -283,9 +283,9 @@ def dataset_setup(feature_table, labels, the_transformer, rs=1234, ts=.2):
   return x_trained_numpy, y_train_numpy, x_test_numpy, y_test_numpy
 
 
-
 def titanic_setup(titanic_table, transformer=titanic_transformer, rs=88, ts=.2):
-    return dataset_setup(titanic_table.drop(columns='Survived'), titanic_table['Survived'].to_list(), transformer, rs=rs, ts=ts)
+  return dataset_setup(titanic_table.drop(columns='Survived'), titanic_table['Survived'].to_list(), transformer, rs=rs, ts=ts)
+
 
 def customer_setup(customer_table, transformer=customer_transformer, rs=107, ts=.2):
-  return dataset_setup(customer_table.drop(columns='Rating'),customer_table['Rating'].to_list(), transformer, rs=rs, ts=ts)
+  return dataset_setup(customer_table.drop(columns='Rating'), customer_table['Rating'].to_list(), transformer, rs=rs, ts=ts)
