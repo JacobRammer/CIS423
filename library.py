@@ -235,14 +235,17 @@ def find_random_state(df, labels, n=200):
   error_list = []
   for i in range(1, n):
     x_train, x_test, y_train, y_test = train_test_split(df, labels, test_size=0.2, shuffle=True,
-                                                    random_state=i, stratify=labels)
+                                                        random_state=i, stratify=labels)
     model.fit(x_train, y_train)
     x_train_pred = model.predict(x_train)  # predict against training set
     x_test_pred = model.predict(x_test)  # predict against test set
-    train_error = f1_score(y_train, x_train_pred)  # how bad did we do with prediction on training data?
-    test_error = f1_score(y_test, x_test_pred) # how bad did we do with prediction on test data?
-    error_list.append(test_error / train_error) # take the ratio
-  
+    # how bad did we do with prediction on training data?
+    train_error = f1_score(y_train, x_train_pred)
+    if train_error != 0:
+      # how bad did we do with prediction on test data?
+      test_error = f1_score(y_test, x_test_pred)
+      error_list.append(test_error / train_error)  # take the ratio
+
   rs_value = sum(error_list)/len(error_list)
   return np.array(abs(error_list - rs_value)).argmin()
 
