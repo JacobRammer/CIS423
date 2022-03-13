@@ -189,24 +189,28 @@ class TukeyTransformer(BaseEstimator, TransformerMixin):
 
 
 class MinMaxTransformer(BaseEstimator, TransformerMixin):
+  def __init__(self):
+    pass
+  #fill in rest below
+  def fit(self, X, y = None):
+    print("Warning: MinMaxTransformer.fit does nothing.")
+    return X
 
-    def fit(self, X, X2=None):
-        print("MinMaxTransformer fit does nothing!")
-        return X
+  def transform(self, X):
+    temp = X.copy()
+    columns = set(temp.columns.to_list())
+    for col in columns:
+      mi, mx = temp[col].min(), temp[col].max() 
+      denom = mx - mi
+      if not denom:
+        pass
+      else:
+        temp[col] = [(value - mi) / denom for value in temp[col].to_list()]
+    return temp
 
-    def transform(self, X, X2=None):
-        temp = X.copy()
-        for col in temp.columns:
-            mi = temp[col].min()
-            mx = temp[col].max()
-            denom = mx - mi
-            temp[col] -= mi
-            temp[col] /= denom
-
-        return temp
-
-    def fit_transform(self, X, X2=None):
-        return self.transform(X)
+  def fit_transform(self, X, y = None):
+    result = self.transform(X)
+    return result
 
 
 class KNNTransformer(BaseEstimator, TransformerMixin):
