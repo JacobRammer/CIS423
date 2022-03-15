@@ -107,27 +107,27 @@ class DropColumnsTransformer(BaseEstimator, TransformerMixin):
     def fit_transform(self, X, X2=None):
         return self.transform(X)
 
-
 class PearsonTransformer(BaseEstimator, TransformerMixin):
-    def __init__(self, threshold):
-        self.threshold = threshold
+  def __init__(self, threshold):
+    self.threshold = threshold
 
+  #define methods below
     def fit(self, X, X2=None):
-        print("From PearsonTransformer: Warning: Fit does nothing!")
-        return X
+      print("From PearsonTransformer: Warning: Fit does nothing!")
+      return X
 
-    def transform(self, X):
-        temp = X.copy()
-        df_corr = temp.corr(method='pearson')
-        masked_df = df_corr.abs() > self.threshold
-        upper_mask = np.triu(masked_df, 1)
-        t = np.any(upper_mask, 0)
-        correlated_columns = [masked_df.columns[i] for i, j in
-                              enumerate(upper_mask) if t[i]]
-        new_df = temp.drop(correlated_columns, axis=1)
+  def transform(self, X):
+      temp = X.copy()
+      df_corr = temp.corr(method='pearson')
+      masked_df = df_corr.abs() > self.threshold
+      upper_mask = np.triu(masked_df, 1)
+      t = np.any(upper_mask, 0)
+      correlated_columns = [masked_df.columns[i] for i, j in
+                            enumerate(upper_mask) if t[i]]
+      return temp.drop(correlated_columns, axis=1)
 
-    def fit_transform(self, X, y=None, **fit_params):
-        return self.transform(X)
+  def fit_transform(self, X, y=None, **fit_params):
+      return self.transform(X)
 
 
 class Sigma3Transformer(BaseEstimator, TransformerMixin):
