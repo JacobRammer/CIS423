@@ -124,7 +124,7 @@ class PearsonTransformer(BaseEstimator, TransformerMixin):
         t = np.any(upper_mask, 0)
         correlated_columns = [masked_df.columns[i] for i, j in
                               enumerate(upper_mask) if t[i]]
-        new_df = transformed_df.drop(correlated_columns, axis=1)
+        new_df = temp.drop(correlated_columns, axis=1)
 
     def fit_transform(self, X, y=None, **fit_params):
         return self.transform(X)
